@@ -111,7 +111,7 @@ struct dataStruct {
 void setup() {
   Serial.begin(115200);
   AFMS.begin();
-  TWBR = ((F_CPU /400000l) - 16) / 2;               // Change the i2c clock to 400KHz
+  //TWBR = ((F_CPU /400000l) - 16) / 2;               // Change the i2c clock to 400KHz
 
   pinMode (2, INPUT_PULLUP);
   pinMode (3, INPUT_PULLUP);
