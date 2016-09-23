@@ -7,6 +7,7 @@ The code is written to work with:
   - Arduino Uno
   - Adafruit Motor Sheild v2.3
   - 2x 4 wire stepper motors
+  - (soon to work with nrf24l01+ transceiver for remote operation)
 
 Usage: Connect 1 end of wire to gnd, tap the other end on 
   - pin 2 or 3 to move motor 1, CW - CCW
@@ -15,6 +16,5 @@ Usage: Connect 1 end of wire to gnd, tap the other end on
   - pin 8 or 9 to recall location, 1 - 2
 
 Things to sort:
-  - Stop moving to set position when manual move made
-  - Add code for wireless nrf24l01+ transceiver, including mapped joystick control
-  - Add logarithmic lookup table for smoother acceleration / deceleration
+  - Add code for wireless nrf24l01+ transceiver, including mapped joystick control (untested)
+  - Add logarithmic lookup table for smoother acceleration / deceleration (tested, not working very well)
