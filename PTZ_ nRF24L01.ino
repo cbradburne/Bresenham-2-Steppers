@@ -336,18 +336,22 @@ void loop() {
   }
 /*
   if (!xJoyCW) {
+    autoPos = false;
     xMotor->onestep(FORWARD, DOUBLE);
     actualXPos++;
   }
   if (!xJoyCCW) {
+    autoPos = false;
     xMotor->onestep(BACKWARD, DOUBLE);
     actualXPos--;
   }
   if (!yJoyCW) {
+    autoPos = false;
     yMotor->onestep(FORWARD, DOUBLE);
     actualYPos++;
   }
   if (!yJoyCCW) {
+    autoPos = false;
     yMotor->onestep(BACKWARD, DOUBLE);
     actualYPos--;
   }
@@ -401,11 +405,15 @@ void loop() {
 void goToPosition(long positionX2reach, long positionY2reach, long positionZ2reach) {
   if (newMove) {
     travelledXDistance = 0;
+    travelledYDistance = 0;
     totalXDistance = abs(actualXPos - positionX2reach);
     totalYDistance = abs(actualYPos - positionY2reach);
 
-    if (distanceToXPos > distanceToYPos) {
+    if (totalXDistance > totalYDistance) {
       xLeading = true;
+    }
+    if (totalYDistance > totalXDistance) {
+      xLeading = false;
     }
     err = (totalXDistance>totalYDistance ? totalXDistance : -totalYDistance)/2;
     newMove = false;
