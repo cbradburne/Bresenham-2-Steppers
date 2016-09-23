@@ -218,7 +218,7 @@ void goToPosition(long positionY2reach, long positionX2reach) {
         constrainXDistance = constrain(travelledXDistance, 0, constrainedLimit);
         int stepperAccel = map(constrainXDistance, 0, constrainedLimit, startingXSpeed, 0);
         //logAccel = myArray[stepperAccel];
-        if (timeElapsed >= stepperAccel) {
+        if (timeElapsed >= stepperAccel) {                                // replace stepperAccel with logAccel
           if (e2 >-distanceToXPos) {
             err -= distanceToYPos;
             if (motorXDir) {
@@ -250,7 +250,7 @@ void goToPosition(long positionY2reach, long positionX2reach) {
         constrainXDistance = constrain(distanceToXPos, 0, constrainedLimit);
         int stepperAccel = map(constrainXDistance, 0, constrainedLimit, startingXSpeed, 0);
         //logAccel = myArray[stepperAccel];
-        if (timeElapsed >= stepperAccel) {
+        if (timeElapsed >= stepperAccel) {                                // replace stepperAccel with logAccel
           if (e2 >-distanceToXPos) {
             err -= distanceToYPos;
             if (motorXDir) {
@@ -291,7 +291,7 @@ void goToPosition(long positionY2reach, long positionX2reach) {
         constrainYDistance = constrain(travelledYDistance, 0, constrainedLimit);
         int stepperAccel = map(constrainYDistance, 0, constrainedLimit, startingYSpeed, 0);
         //logAccel = myArray[stepperAccel];
-        if (timeElapsed >= stepperAccel) {
+        if (timeElapsed >= stepperAccel) {                                // replace stepperAccel with logAccel
           if (e2 >-distanceToXPos) {
             err -= distanceToYPos;
             if (motorXDir) {
@@ -323,7 +323,7 @@ void goToPosition(long positionY2reach, long positionX2reach) {
         constrainYDistance = constrain(distanceToYPos, 0, constrainedLimit);
         int stepperAccel = map(constrainYDistance, 0, constrainedLimit, startingYSpeed, 0);
         //logAccel = myArray[stepperAccel];
-        if (timeElapsed >= stepperAccel) {
+        if (timeElapsed >= stepperAccel) {                                // replace stepperAccel with logAccel
           if (e2 >-distanceToXPos) {
             err -= distanceToYPos;
             if (motorXDir) {
