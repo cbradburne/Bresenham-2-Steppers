@@ -26,65 +26,77 @@ long ySet1 = 0;
 long xSet2 = 0;
 long ySet2 = 0;
 
-volatile long actualYPos = 0;
 volatile long actualXPos = 0;
+volatile long actualYPos = 0;
+volatile long actualZPos = 0;
 
-long positionY2reach;
 long positionX2reach;
-long newYPosition;
+long positionY2reach;
+long positionZ2reach;
 long newXPosition;
-long constrainYDistance;
+long newYPosition;
+long newZPosition;
 long constrainXDistance;
-long travelledYDistance;
+long constrainYDistance;
+long constrainZDistance;
 long travelledXDistance;
-long distanceToYPos;
+long travelledYDistance;
+long travelledZDistance;
 long distanceToXPos;
-float totalYDistance;
+long distanceToYPos;
+long distanceToZPos;
 float totalXDistance;
+float totalYDistance;
+float totalZDistance;
 
-long recYPos1;
 long recXPos1;
-long recYPos2;
+long recYPos1;
+long recZPos1;
 long recXPos2;
-long recYPos3;
+long recYPos2;
+long recZPos2;
 long recXPos3;
-long recYPos4;
+long recYPos3;
+long recZPos3;
 long recXPos4;
-long recYPos5;
+long recYPos4;
+long recZPos4;
 long recXPos5;
+long recYPos5;
+long recZPos5;
 
 int oldinByte;
 
 unsigned long previousMillis = 0;
 unsigned long currentMillis;
 
+const int minX = 60;
+const int maxX = 150;
 const int minY = 60;
 const int maxY = 150;
 
-const int minX = 60;
-const int maxX = 150;
-
 const int constrainedLimit = 120;         // how many steps does the acceleration last
-const int startingYSpeed = 30;            // Y accel start speed
 const int startingXSpeed = 30;            // X accel start speed
+const int startingYSpeed = 30;            // Y accel start speed
 
 //const int myArray[30]={0,1,1,2,3,4,5,6,7,8,10,11,12,14,15,16,18,19,20,22,23,24,25,26,27,28,29,29,30};    // half sinewave (30 p-p)
 //const int myArray[30]={0,0,0,1,1,1,2,3,3,4,5,6,7,8,9,10,11,12,14,15,16,18,19,21,22,24,25,27,28,30};      // quarter sinewave (60 p-p)
 //const int myArray[30]={0,0,0,0,1,1,1,1,2,2,2,3,3,4,4,5,6,6,7,8,8,9,10,10,11,12,13,13,14,15};             // quarter sinewave (30 p-p)
 int logAccel;
 
-int Yread;
 int Xread;
+int Yread;
 int err;
 int e2;
 
+
 boolean autoPos;
-boolean motorYDir;
 boolean motorXDir;
+boolean motorYDir;
 boolean newMove = false;
 boolean buttonPressed = false;
-boolean joyYCentral = false;
 boolean joyXCentral = false;
+boolean joyYCentral = false;
 boolean xLeading;
 
 void setup() {
@@ -134,23 +146,23 @@ void loop() {
   }
   if (!mSet1) {
     Serial.println("Record Pos1");
-    recYPos1 = actualYPos;
     recXPos1 = actualXPos;
-    Serial.println(actualYPos);
+    recYPos1 = actualYPos;
     Serial.println(actualXPos);
+    Serial.println(actualYPos);
   }
   if (!mSet2) {
     Serial.println("Record Pos2");
-    recYPos2 = actualYPos;
     recXPos2 = actualXPos;
-    Serial.println(actualYPos);
+    recYPos2 = actualYPos;
     Serial.println(actualXPos);
+    Serial.println(actualYPos);
   }
   if (!mGoTo1 && !buttonPressed) {
     travelledXDistance = 0;
-    Serial.println("Go To Pos1");
-    newYPosition = recYPos1;              
+    Serial.println("Go To Pos1");        
     newXPosition = recXPos1;
+    newYPosition = recYPos1;
     Serial.print("x: ");
     Serial.print(newXPosition);
     Serial.print(", y: ");
@@ -162,8 +174,8 @@ void loop() {
   if (!mGoTo2 && !buttonPressed) {
     travelledXDistance = 0;
     Serial.println("Go To Pos2");
-    newYPosition = recYPos2;
     newXPosition = recXPos2;
+    newYPosition = recYPos2;
     Serial.print("x: ");
     Serial.print(newXPosition);
     Serial.print(", y: ");
@@ -172,33 +184,23 @@ void loop() {
     autoPos = true;
     buttonPressed = true;
   }
+  
   if (autoPos) {
-    goToPosition(newYPosition, newXPosition);
+    goToPosition(newXPosition, newYPosition, newYPosition);
   }
 }
 
-void goToPosition(long positionY2reach, long positionX2reach) {
+void goToPosition(long positionX2reach, long positionY2reach, long positionZ2reach) {
   if (newMove) {
     travelledXDistance = 0;
-    travelledYDistance = 0;
     totalXDistance = abs(actualXPos - positionX2reach);
     totalYDistance = abs(actualYPos - positionY2reach);
 
-    if (totalXDistance > totalYDistance) {
+    if (distanceToXPos > distanceToYPos) {
       xLeading = true;
-    }
-    if (totalYDistance > totalXDistance) {
-      xLeading = false;
     }
     err = (totalXDistance>totalYDistance ? totalXDistance : -totalYDistance)/2;
     newMove = false;
-  }
-
-  if (actualYPos > positionY2reach) {
-    motorYDir = false;
-  }
-  else if (actualYPos < positionY2reach) {
-    motorYDir = true;
   }
   
   if (actualXPos > positionX2reach) {
@@ -207,12 +209,18 @@ void goToPosition(long positionY2reach, long positionX2reach) {
   else if (actualXPos < positionX2reach) {
     motorXDir = true;
   }
+  if (actualYPos > positionY2reach) {
+    motorYDir = false;
+  }
+  else if (actualYPos < positionY2reach) {
+    motorYDir = true;
+  }
   
   if (xLeading) {
     if (actualXPos != positionX2reach) {
       e2 = err;
-      distanceToYPos = abs(actualYPos - positionY2reach);
       distanceToXPos = abs(actualXPos - positionX2reach);
+      distanceToYPos = abs(actualYPos - positionY2reach);
       travelledXDistance = totalXDistance-distanceToXPos;
       if (travelledXDistance <= distanceToXPos) {
         constrainXDistance = constrain(travelledXDistance, 0, constrainedLimit);
@@ -284,8 +292,8 @@ void goToPosition(long positionY2reach, long positionX2reach) {
   if (!xLeading) {
     if (actualYPos != positionY2reach) {
       e2 = err;
-      distanceToYPos = abs(actualYPos - positionY2reach);
       distanceToXPos = abs(actualXPos - positionX2reach);
+      distanceToYPos = abs(actualYPos - positionY2reach);
       travelledYDistance = totalYDistance-distanceToYPos;
       if (travelledYDistance <= distanceToYPos) {
         constrainYDistance = constrain(travelledYDistance, 0, constrainedLimit);
