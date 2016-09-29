@@ -12,7 +12,8 @@ elapsedMillis timeElapsed;
 elapsedMillis timeElapsedX;
 elapsedMillis timeElapsedY;
 
-RF24 radio(48,53);
+// RF24 radio(48,53);   // MEGA   (CE,CSN)
+RF24 radio(9,10);       // UNO    (9 CE, 10 CSN, 11 MOSI, 12 MISO, 13 SCK)
 
 byte addresses[][6] = {"1Node", "2Node"};
 
@@ -113,6 +114,7 @@ void setup() {
   AFMS.begin();
   //TWBR = ((F_CPU /400000l) - 16) / 2;               // Change the i2c clock to 400KHz
 
+  /*
   pinMode (2, INPUT_PULLUP);
   pinMode (3, INPUT_PULLUP);
   pinMode (4, INPUT_PULLUP);
@@ -121,7 +123,8 @@ void setup() {
   pinMode (7, INPUT_PULLUP);
   pinMode (8, INPUT_PULLUP);
   pinMode (9, INPUT_PULLUP);
-
+  */
+  
   radio.begin();          // Initialize the nRF24L01 Radio
   radio.setChannel(108);  // 2.508 Ghz - Above most Wifi Channels
   radio.setDataRate(RF24_250KBPS); // Fast enough.. Better range - RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
@@ -141,6 +144,7 @@ void setup() {
 }
 
 void loop() {
+  /*
   xJoyCW = digitalRead(2);
   xJoyCCW = digitalRead(3);
   yJoyCW = digitalRead(4);
@@ -149,7 +153,8 @@ void loop() {
   mSet2 = digitalRead(7);
   mGoTo1 = digitalRead(8);
   mGoTo2 = digitalRead(9);
-
+  */
+  
   if (radio.available())
   {
 
